@@ -16,7 +16,6 @@ def get_key():
     key = sys.stdin.read(1)
     # Set the tty attributes for file descriptor fd from the attributes
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-
     return key
 
 
@@ -36,8 +35,7 @@ def talker():
     print("e = increase angular speed around z axis (turn right)")
     print("q = decrease angular speed around z axis (turn right)")
     print("any other key = stop")
-    print("ESC = quit input, so ctrl+c is accepted. ")
-
+    print("ESC = quit node")
 
     while not rospy.is_shutdown():
         pressed_key = get_key()
@@ -57,9 +55,8 @@ def talker():
         elif pressed_key == 'q':
             twist_msg.angular.z += speed_increment
 
-
-        elif pressed_key == '\x03':
-            rospy.logwarn("Input was canceled. Press ctrl+c to quit node")
+        elif pressed_key == '\x1b' or pressed_key == '\x03':
+            rospy.logwarn("Input was canceled. Node will quit ...")
             twist_msg.linear.x = 0.0
             twist_msg.linear.y = 0.0
             twist_msg.linear.z = 0.0
